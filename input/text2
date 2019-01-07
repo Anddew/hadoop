@@ -1,0 +1,116 @@
+SSH logo
+Your browser does not allow storing cookies. We recommend enabling them.
+SSH.COM uses cookies to give you the best experience and most relevant marketing. More info
+DECLINE GOT IT!
+Updated June 12, 2017
+
+    HomeSSHauthorized_keysOpenSSH
+
+Configuring Authorized Keys for OpenSSH
+
+Authorized keys specify which users are allowed to log into a server using public key authentication in SSH.
+
+In OpenSSH, authorized keys are configured separately for each user, typically in a file called authorized_keys.
+Contents
+
+    Location of the Authorized Keys File
+    Generating New Keys
+    Format of the Authorized Keys File
+    Key Management for OpenSSH
+
+Location of the Authorized Keys File
+
+With OpenSSH, the authorized keys are by default configured in .ssh/authorized_keys in the user's home directory. Many OpenSSH versions also look for ssh/authorized_keys2. Some organizations use custom OpenSSH builds with different default paths.
+
+The AuthorizedKeysFile configuration option in /etc/ssh/sshd_config specifies where the SSH server looks for authorized keys. The option may contain more than one location, separated by spaces. %% is replaced by literal %, %h by the home directory of the user being authenticated, and %u by the login name of the user. For example, /var/ssh/%u/ak would cause the SSH server to look for authorized keys for the user jane from /var/ssh/jane/ak.
+
+The AuthorizedKeysCommand option can be used to specify a program that is used to fetch authorized keys for a user. The program gets as argument the user name for which to look for keys. A common use of this option is to fetch authorized keys from an LDAP directory.
+
+When selecting a solution for managing SSH keys, it is important to ensure it understands SSH configuration files and can parse the locations where keys are stored, and is able to deal with custom builds used in the organization, if any. Support for the AuthorizedKeysCommand may also be an important consideration, particularly in cloud environments.
+Generating New Keys
+
+New key pairs can be generated using the ssh-keygen program and the ssh-copy-id tool can be used for copying keys in an authorized_keys file on a server. It is almost too easy, and that is one of the reasons why the number of SSH keys has become so uncontrolled.
+
+In a locked-down environment, a proper key management tool such as Universal SSH Key Manager would normally be used. Such tools can handle keys in root-owned locations and alert if a root user installs an unauthorized key.
+Format of the Authorized Keys File
+
+In OpenSSH, a user's authorized keys file lists keys that are authorized for authenticating as that user, one per line. Lines starting with # and empty lines are ignored.
+
+Each line contains a public SSH key. The public key may be preceded by options that control what can be done with the key.
+
+The following options are supported in authorized_keys files.
+cert-authority
+
+Indicates that the key should be trusted as a certificate authority to validate proprietary OpenSSH certificates for authenticating as that user. We strongly recommend against using this option, as using OpenSSH certificates for user authentication makes it impossible to audit who has access to the server by inspecting server configuration files, and no trustworthy OpenSSH certificate authority exists.
+command="cmd"
+
+Forces a command to be executed when this key is used for authentication. This is also called command restriction or forced command. The effect is to limit the privileges given to the key, and specifying this options is often important for implementing the principle of least privilege. Without this option, the key grants unlimited access as that user, including obtaining shell access.
+
+It is a common error when configuring SFTP file transfers to accidentally omit this option and permit shell access. CryptoAuditor can be used at a firewall to prevent misconfigurations from accidentally granting shell access and to restrict which files can be transferred by SFTP in which direction, and to subject any transferred files to data loss prevention and anti-virus checks.
+environment="NAME=value"
+
+Specifies an environment variable and its value to be added to the environment before executing shell or command.
+from="pattern-list"
+
+Specifies a source restriction or from-stanza, restricting the set of IP addresses or host names from which the reverse-mapped DNS names from which the key can be used.
+
+The patterns may use * as wildcard, and may specify IP addresses using * or in CIDR address/masklen notation. Only hosts whose IP address or DNS name matches one of the patterns are allowed to use the key.
+
+More than one pattern may be specified by separating them by commas. An exclamation mark ! can be used in front of a pattern to negate it.
+no-agent-forwarding
+
+Prevents forwarding the SSH authentication agent.
+no-port-forwarding
+
+Prevents port forwarding for connections using this key. This can be important for, e.g., keys intended to be used only with SFTP file transfers.
+
+Forgetting to disable port forwarding can allow SSH tunneling to be performed using keys only intended for file transfers.
+no-pty
+
+Prevents allocation of a pseudo-tty for connections using the key.
+no-user-rc
+
+Disables execution of .ssh/rc when using the key.
+no-x11-forwarding
+
+Prevents X11 forwarding.
+permitopen="host:port"
+
+Limits port forwarding only to the specified port on the specified host. * as port allows all ports. More than one host and port can be specified using commas.
+principals="principals"
+
+On a cert-authority line, specifies which users (principal name in proprietary OpenSSH certificates) can log in using their certificate. Use of this option (or cert-authority) is not recommended, as it makes impossible to audit (by inspecting the server) how many different keys grant access as that user, and OpenSSH certificate authorities are not generally very secure.
+tunnel="n"
+
+Specifies a tunnel device number to be used if the client requests IP packet tunneling after logging in using a key with this option. IP tunneling is a rarely used option, but can enable full [VPN access to the internal network over SSH.
+Key Management for OpenSSH
+
+OpenSSH keys are fully supported in Universal SSH Key Manager. It is the leading product for SSH key management.
+
+For general information on SSH key management, see our key management page.
+
+Want to see how PrivX can help your organisation?
+Are you a DEVELOPER accessing cloud hosts, are you a IT ADMIN managing access & credentials in your corporation, are you BUSINESS MANAGER and want to save money or are you responsible of IT SECURITY in DevOps
+
+
+
+NEAREST SSH.COM OFFICE
+SSH Communications Security, Inc.
+460 Totten Pond Road #460
+Waltham, MA 02140
+USA
+781-247-2100
+Quick links
+
+    Home
+    PrivX
+    Universal SSH Key Manager software
+    CryptoAuditor
+    Tectia
+    Get a demo
+    Support
+    About us
+    Contact
+    SSH.COM blog
+
+Copyright ©2018 SSH Communications Security, Inc. All Rights Reserved. See Data Privacy Policy, Website Terms of Use, and Standard Terms and Conditions EULAs

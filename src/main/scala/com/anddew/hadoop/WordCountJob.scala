@@ -14,14 +14,14 @@ class WordCountJob extends Configured with Tool {
     val job: Job = Job.getInstance(getConf, "WordCount")
     job.setJarByClass(getClass)
 
-    FileInputFormat.addInputPath(job, new Path("path"))
+    FileInputFormat.addInputPath(job, new Path("input"))
     job.setInputFormatClass(classOf[TextInputFormat])
 
     job.setMapperClass(classOf[WordCountMapper])
     job.setReducerClass(classOf[WordCountReducer])
     job.setCombinerClass(classOf[WordCountReducer])
 
-    FileOutputFormat.setOutputPath(job, new Path("path"))
+    FileOutputFormat.setOutputPath(job, new Path("output"))
     job.setOutputFormatClass(classOf[TextOutputFormat[_,_]])
     job.setOutputKeyClass(classOf[Text])
     job.setOutputValueClass(classOf[IntWritable])

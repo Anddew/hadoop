@@ -17,8 +17,4 @@ class WordCountReducer extends Reducer[Text, IntWritable, Text, IntWritable] {
     context.write(key, new IntWritable(sum))
   }
 
-  override def run(context: Reducer[Text, IntWritable, Text, IntWritable]#Context): Unit = {
-
-  }
-
 }

@@ -18,8 +18,4 @@ class WordCountMapper extends Mapper[LongWritable, Text, Text, IntWritable] {
     }
   }
 
-  override def run(context: Mapper[LongWritable, Text, Text, IntWritable]#Context): Unit = {
-
-  }
-
 }
